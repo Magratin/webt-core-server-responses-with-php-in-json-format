@@ -2,15 +2,17 @@
 header('Content-Type: application/json');
 require_once 'audio.php';
 
+
+$allOSTs = isset($_GET['all']) && $_GET['all'] === 'true';
 $ostId = isset($_GET['id']) ? intval($_GET['id']) : null;
 
-if ($ostId === null) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Missing OST ID']);
+$osts = seeder::create();
+
+if ($allOSTs || $ostId === null) {
+    echo json_encode($osts);
     exit;
 }
 
-$osts = seeder::create();
 
 $foundOST = null;
 foreach ($osts as $ost) {
@@ -19,6 +21,7 @@ foreach ($osts as $ost) {
         break;
     }
 }
+
 
 if ($foundOST) {
     echo json_encode($foundOST);
